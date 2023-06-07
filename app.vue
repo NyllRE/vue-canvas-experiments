@@ -15,6 +15,7 @@ main
 main
   height: 100vh
   .content
+    user-select: none
     position: relative
     height: 100%
     display: flex
@@ -26,6 +27,8 @@ main
 
     img.nyll
       height: 10em
+      user-drag: none
+      -webkit-user-drag: none
     gap: 2em
     h1
       color: white
