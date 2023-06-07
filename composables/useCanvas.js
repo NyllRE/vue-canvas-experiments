@@ -82,12 +82,25 @@ export default (canvas, context) => {
          this.width = this.canvas.width;
          this.height = this.canvas.height;
          this.particles = []
-         this.numOfParticles = 100
-         this.mouse = {
-            x: 0,
-            y: 0,
-            pressed: false,
-            radius: 150
+         this.numOfParticles = 150
+
+         if (this.width > this.height) {
+            this.mouse = {
+               x: this.width / 3,
+               y: this.height / 2,
+               pressed: true,
+               pressed2: true,
+               radius: 300
+            }
+         } else {
+            this.mouse = {
+               x: this.width / 2,
+               y: this.height / 2,
+               pressed: true,
+               pressed2: false,
+               radius: 150
+            }
+            this.numOfParticles = 100
          }
 
          this.createParticles()
@@ -99,18 +112,24 @@ export default (canvas, context) => {
             this.particles.forEach(particle => particle.reset())
          })
          window.addEventListener('mousemove', e => {
-            if (this.mouse.pressed) {
+            if (this.mouse.pressed2) {
                this.mouse.x = e.x
                this.mouse.y = e.y
             }
          })
          window.addEventListener('mousedown', e => {
-            this.mouse.pressed = true
+            this.mouse.pressed2 = true
             this.mouse.x = e.x
             this.mouse.y = e.y
          })
          window.addEventListener('mouseup', e => {
-            // this.mouse.pressed = false
+            this.mouse.pressed2 = false
+            if (this.width > this.height) {
+               this.mouse.x = this.width / 3
+            } else {
+               this.mouse.x = this.width / 2
+            }
+            this.mouse.y = this.height / 2
          })
       }
       createParticles() {
