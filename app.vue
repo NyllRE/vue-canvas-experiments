@@ -6,6 +6,7 @@ main
   .content
     img.nyll( src="~/assets/img/Nyll.svg" )
     h1 Canvas Experiments
+    NuxtLink(to="/diep") Diep.io Clone
 
 </template>
 
@@ -24,6 +25,8 @@ main
     padding-left: 33.3%
     transform: translateX(-20%)
     width: fit-content
+    color: white
+    text-align: center
 
     img.nyll
       height: 10em
@@ -31,9 +34,18 @@ main
       -webkit-user-drag: none
     gap: 2em
     h1
-      color: white
       font-weight: 800
       font-size: 2.5em
+    a
+      font-size: 2em
+      background: #fff3
+      width: fit-content
+      margin: 0 auto
+      padding: .2em 1em
+      border-radius: 1em
+      backdrop-filter: blur(.2em)
+      border: 1px solid #fff3
+
 
     @media (orientation: portrait)
       padding: 0
