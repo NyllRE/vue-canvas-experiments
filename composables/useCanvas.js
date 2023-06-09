@@ -82,14 +82,14 @@ export default (canvas, context) => {
          this.width = this.canvas.width;
          this.height = this.canvas.height;
          this.particles = []
-         this.numOfParticles = 150
+         this.numOfParticles = 200
 
          if (this.width > this.height) {
             this.mouse = {
                x: this.width / 3,
                y: this.height / 2,
                pressed: true,
-               pressed2: true,
+               pressed2: false,
                radius: 300
             }
          } else {
