@@ -4,5 +4,5 @@
 
 <template lang="pug">
 .diep
-   h1 not ready
+   DiepIo
 </template>
