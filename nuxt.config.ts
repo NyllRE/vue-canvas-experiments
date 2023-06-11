@@ -2,4 +2,5 @@
 export default defineNuxtConfig({
 	devtools: { enabled: true },
 	css: ['~/assets/sass/main.sass'],
+	ssr: false,
 });

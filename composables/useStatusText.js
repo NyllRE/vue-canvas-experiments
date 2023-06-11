@@ -1,4 +1,4 @@
-export default (ctx, input, pos) => {
-   ctx.font = "50px Helvetica, Arial, sans-serif"
-   ctx.fillText(`Last input: ${input.lastKey}`, pos.x, pos.y)
+export default (ctx, value, pos, size, canvas) => {
+   ctx.font = `${size}px Helvetica, Arial, sans-serif`
+   ctx.fillText(`Last input: ${value}`, pos.x, pos.y)
 }
