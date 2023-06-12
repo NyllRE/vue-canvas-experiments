@@ -13,7 +13,7 @@ export default (canvas, context) => {
       constructor(effect, canvas) {
          this.canvas = canvas;
          this.effect = effect;
-         this.radius = random(20, 5);
+         this.radius = random(30, 20);
          //=> make all particles visible
          this.x = this.radius + Math.random() * (this.canvas.width - this.radius * 2);
          this.y = this.radius + Math.random() * (this.canvas.height - this.radius * 2);
@@ -37,6 +37,20 @@ export default (canvas, context) => {
          //    y: self.y - self.radius * 2
          // }, '20', this.canvas)
 
+         if (this.x < this.radius) {
+            this.x = this.radius;
+            this.pushX *= -1;
+         } else if (this.x > this.effect.width - this.radius) {
+            this.x = this.effect.width - this.radius;
+            this.pushX *= -1;
+         }
+         if (this.y < this.radius) {
+            this.y = this.radius;
+            this.pushY *= -1;
+         } else if (this.y > this.effect.height - this.radius) {
+            this.y = this.effect.height - this.radius;
+            this.pushY *= -1;
+         }
       }
       push() {
          if (this.x > this.effect.width || this.x < 0) this.x = this.effect.width
@@ -49,12 +63,12 @@ export default (canvas, context) => {
          this.effect = effect;
          this.canvas = canvas;
          this.input = input;
-         this.radius = random(30, 15);
+         this.radius = 40;
          //=> make all particles visible
          this.x = this.radius + Math.random() * (this.canvas.width - this.radius * 2);
          this.y = this.radius + Math.random() * (this.canvas.height - this.radius * 2);
-         this.vx = this.radius * .05
-         this.vy = this.radius * .05
+         this.vx = this.radius * .01
+         this.vy = this.radius * .01
          this.pushX = 0
          this.pushY = 0
          this.colliding = false
@@ -146,8 +160,8 @@ export default (canvas, context) => {
             const
                e1 = this.entities[a],
                e2 = this.player,
-               dx = Math.abs(e2.x - e1.x),
-               dy = Math.abs(e2.y - e1.y),
+               dx = e2.x - e1.x,
+               dy = e2.y - e1.y,
                distance = Math.hypot(dx, dy),
                distanceRadius = e2.radius + e1.radius
 
@@ -161,6 +175,8 @@ export default (canvas, context) => {
                // Calculate push direction for each entity
                const pushX = Math.cos(angle);
                const pushY = Math.sin(angle);
+               console.log({ pushX, pushY, angle, dx, dy });
+
                this.entities[a].x -= pushX * e1.collisionForce;
                this.entities[a].y -= pushY * e1.collisionForce;
                this.player.x += pushX * e2.collisionForce;
