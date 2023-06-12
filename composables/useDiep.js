@@ -9,140 +9,10 @@ export default (canvas, context) => {
       context.strokeStyle = 'white'
    }
 
-   class Particle {
-      constructor(effect, canvas) {
-         this.canvas = canvas;
-         this.effect = effect;
-         this.radius = random(30, 20);
-         //=> make all particles visible
-         this.x = this.radius + Math.random() * (this.canvas.width - this.radius * 2);
-         this.y = this.radius + Math.random() * (this.canvas.height - this.radius * 2);
-         this.vx = this.radius * .01
-         this.vy = this.radius * .01
-         this.pushX = 0
-         this.pushY = 0
-         this.friction = 0.99
-         this.colliding = false
-         this.collisionForce = 2.5;
-         this.color = 'green'
-      }
-      draw(ctx) {
-         // ctx.fillStyle = `hsl( ${(this.x + this.y) * .3}, 100%, 50%)`
-         ctx.beginPath();
-         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
-         ctx.fillStyle = this.color
-         ctx.fill()
-      }
-      update(ctx) {
-
-         if (this.colliding) console.log('collision particle')
-         this.color = this.colliding ? "red" : "green"
-         // useStatusText(ctx, JSON.stringify(this.colliding), {
-         //    x: self.x - self.radius * 4,
-         //    y: self.y - self.radius * 2
-         // }, '20', this.canvas)
-
-         if (this.x < this.radius) {
-            this.x = this.radius;
-            this.pushX *= -1;
-         } else if (this.x > this.effect.width - this.radius) {
-            this.x = this.effect.width - this.radius;
-            this.pushX *= -1;
-         }
-         if (this.y < this.radius) {
-            this.y = this.radius;
-            this.pushY *= -1;
-         } else if (this.y > this.effect.height - this.radius) {
-            this.y = this.effect.height - this.radius;
-            this.pushY *= -1;
-         }
-         this.x += (this.pushX *= this.friction)
-         this.y += (this.pushY *= this.friction)
-      }
-      push() {
-         if (this.x > this.effect.width || this.x < 0) this.x = this.effect.width
-      }
-   }
-
-
-   class Player {
-      constructor(effect, canvas, input) {
-         this.effect = effect;
-         this.canvas = canvas;
-         this.input = input;
-         this.radius = 40;
-         //=> make all particles visible
-         this.x = this.radius + Math.random() * (this.canvas.width - this.radius * 2);
-         this.y = this.radius + Math.random() * (this.canvas.height - this.radius * 2);
-         this.vx = this.radius * .02
-         this.vy = this.radius * .02
-         this.controlSpeed = .5
-         this.pushX = 0
-         this.pushY = 0
-         this.colliding = false
-         this.collisionForce = 1;
-         this.collisionAngle = 0
-         this.friction = 0.96
-         this.color = 'blue'
-      }
-      draw(ctx) {
-         // ctx.fillStyle = `hsl( ${(this.x + this.y) * .3}, 100%, 50%)`
-         ctx.beginPath();
-         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
-         ctx.fillStyle = this.color
-         ctx.fill()
-      }
-      update(ctx) {
-
-         this.color = this.colliding ? "red" : "blue"
-         this.pushY += this.input.pressedKeys.includes('push down') ? this.controlSpeed * this.vy : 0
-         this.pushY += this.input.pressedKeys.includes('push up') ? -this.controlSpeed * this.vy : 0
-
-         this.pushX += this.input.pressedKeys.includes('push right') ? this.controlSpeed * this.vx : 0
-         this.pushX += this.input.pressedKeys.includes('push left') ? -this.controlSpeed * this.vx : 0
-
-         if (this.colliding) {
-            const
-               pushX = Math.cos(this.collisionAngle),
-               pushY = Math.sin(this.collisionAngle);
-
-            this.pushX += pushX;
-            this.pushY += pushY;
-            this.x += (this.pushX *= this.friction) * this.collisionForce;
-            this.y += (this.pushY *= this.friction) * this.collisionForce;
-         } else {
-            this.x += (this.pushX *= this.friction)
-            this.y += (this.pushY *= this.friction)
-         }
-
-         useStatusText(ctx, JSON.stringify(this.colliding), {
-            x: self.x - self.radius * 4,
-            y: self.y - self.radius * 2
-         }, '20', this.canvas)
 
 
 
 
-         if (this.x < this.radius) {
-            this.x = this.radius;
-            this.pushX *= -1;
-         } else if (this.x > this.effect.width - this.radius) {
-            this.x = this.effect.width - this.radius;
-            this.pushX *= -1;
-         }
-         if (this.y < this.radius) {
-            this.y = this.radius;
-            this.pushY *= -1;
-         } else if (this.y > this.effect.height - this.radius) {
-            this.y = this.effect.height - this.radius;
-            this.pushY *= -1;
-         }
-
-      }
-      push() {
-         if (this.x > this.effect.width || this.x < 0) this.x = this.effect.width
-      }
-   }
 
    class Effect {
       constructor(canvas, input) {
@@ -150,7 +20,7 @@ export default (canvas, context) => {
          this.width = this.canvas.width;
          this.height = this.canvas.height;
          this.entities = []
-         this.player = new Player(this, canvas, input)
+         this.player = new usePlayer(this, canvas, input)
 
          this.createEntities()
 
@@ -162,8 +32,8 @@ export default (canvas, context) => {
          })
       }
       createEntities() {
-         for (let i = 0; i < 5; i++) {
-            const particle = new Particle(this, canvas)
+         for (let i = 0; i < 50; i++) {
+            const particle = new useParticle(this, canvas)
             this.entities.push(particle)
          }
       }
@@ -194,6 +64,7 @@ export default (canvas, context) => {
                playerCollision = true;
                const angle = Math.atan2(dy, dx);
                this.player.collisionAngle = angle
+               this.entities[a].collisionAngle = angle
                //=>> Calculate push direction for each entity
                const pushX = Math.cos(angle);
                const pushY = Math.sin(angle);
@@ -209,9 +80,7 @@ export default (canvas, context) => {
          this.player.colliding = playerCollision;
       }
    }
-   const random = (last, first = 0) => {
-      return Math.random() * last + first
-   }
+
 
    const input = new useInputs()
    const effect = new Effect(canvas, input)
@@ -222,7 +91,7 @@ export default (canvas, context) => {
       context.clearRect(0, 0, canvas.width, canvas.height)
       effect.handlePlayers(context)
       effect.detectCollisions()
-      useStatusText(context, input.lastKey, {
+      useStatusText(context, JSON.stringify(input.pressedKeys), {
          x: 50,
          y: 100
       }, '50', canvas)

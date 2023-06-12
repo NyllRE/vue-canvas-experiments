@@ -15,7 +15,6 @@ export default class Input {
             this.pressedKeys.splice(this.pressedKeys.indexOf('push down'))
          }
 
-
          if (!this.pressedKeys.includes(this.lastKey)) {
             this.pressedKeys.push(this.lastKey)
          }
@@ -24,7 +23,6 @@ export default class Input {
       window.addEventListener('keyup', (e) => {
          this.lastKey = lastKeyValue(e.key, 'release')
          this.pressedKeys.splice(this.pressedKeys.indexOf(this.lastKey))
-         console.log(this.pressedKeys);
       })
    }
 }
