@@ -13,18 +13,25 @@ export default class Player {
       this.pushX = 0
       this.pushY = 0
       this.colliding = false
-      this.collisionForce = 1;
+      this.collisionForce = this.radius * .02;
       this.collisionAngle = 0
       this.friction = 0.96
-      this.mainColor = `hsl(${random(360)}, 100%, 50%)`
+      this.mainColor = `hsl(${random(275, 225)}, 100%, 50%)`
       this.color = this.mainColor
    }
    draw(ctx) {
       // ctx.fillStyle = `hsl( ${(this.x + this.y) * .3}, 100%, 50%)`
       ctx.beginPath();
+
+      const gradient = ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height)
+      gradient.addColorStop(0, 'white')
+      gradient.addColorStop(.25, 'lightblue')
+      gradient.addColorStop(.50, 'magenta')
+      gradient.addColorStop(.75, 'blue')
+      gradient.addColorStop(1, 'pink')
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
       ctx.fillStyle = this.color
-      ctx.strokeStyle = '#fff9'
+      ctx.strokeStyle = gradient
       ctx.lineWidth = 10
       ctx.stroke()
       ctx.fill()

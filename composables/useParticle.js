@@ -12,13 +12,21 @@ export default class Particle {
       this.pushY = 0
       this.friction = 0.99
       this.colliding = false
-      this.collisionForce = 2.5;
+      this.collisionForce = this.radius * .08;
       this.collisionAngle = 0;
-      this.mainColor = `hsl(${random(360)}, 30%, 50%)`
+      this.mainColor = `hsl(${random(360)}, 50%, 50%)`
       this.color = this.mainColor
    }
+   gradient(ctx) {
+      const gradient = ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height)
+      gradient.addColorStop(0, 'white')
+      gradient.addColorStop(.25, 'lightblue')
+      gradient.addColorStop(.50, 'magenta')
+      gradient.addColorStop(.75, 'blue')
+      gradient.addColorStop(1, 'pink')
+      return gradient
+   }
    draw(ctx) {
-      // ctx.fillStyle = `hsl( ${(this.x + this.y) * .3}, 100%, 50%)`
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
       ctx.fillStyle = this.color
@@ -26,7 +34,7 @@ export default class Particle {
    }
    update(ctx) {
 
-      this.color = this.colliding ? "red" : this.mainColor
+      this.color = this.colliding ? "red" : this.gradient(ctx)
       if (this.colliding) {
          const
             pushX = Math.cos(this.collisionAngle),
