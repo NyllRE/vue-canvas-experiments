@@ -17,6 +17,11 @@ export default (canvas, context) => {
          //=> make all particles visible
          this.x = this.radius + Math.random() * (this.canvas.width - this.radius * 2);
          this.y = this.radius + Math.random() * (this.canvas.height - this.radius * 2);
+         this.vx = this.radius * .01
+         this.vy = this.radius * .01
+         this.pushX = 0
+         this.pushY = 0
+         this.friction = 0.99
          this.colliding = false
          this.collisionForce = 2.5;
          this.color = 'green'
@@ -51,6 +56,8 @@ export default (canvas, context) => {
             this.y = this.effect.height - this.radius;
             this.pushY *= -1;
          }
+         this.x += (this.pushX *= this.friction)
+         this.y += (this.pushY *= this.friction)
       }
       push() {
          if (this.x > this.effect.width || this.x < 0) this.x = this.effect.width
@@ -67,8 +74,8 @@ export default (canvas, context) => {
          //=> make all particles visible
          this.x = this.radius + Math.random() * (this.canvas.width - this.radius * 2);
          this.y = this.radius + Math.random() * (this.canvas.height - this.radius * 2);
-         this.vx = this.radius * .01
-         this.vy = this.radius * .01
+         this.vx = this.radius * .02
+         this.vy = this.radius * .02
          this.pushX = 0
          this.pushY = 0
          this.colliding = false
@@ -177,10 +184,15 @@ export default (canvas, context) => {
                const pushY = Math.sin(angle);
                console.log({ pushX, pushY, angle, dx, dy });
 
+               this.entities[a].pushX -= pushX;
+               this.entities[a].pushY -= pushY;
                this.entities[a].x -= pushX * e1.collisionForce;
                this.entities[a].y -= pushY * e1.collisionForce;
+
                this.player.x += pushX * e2.collisionForce;
                this.player.y += pushY * e2.collisionForce;
+               this.player.pushX += pushX;
+               this.player.pushY += pushY;
             }
          }
 
