@@ -76,12 +76,14 @@ export default (canvas, context) => {
          this.y = this.radius + Math.random() * (this.canvas.height - this.radius * 2);
          this.vx = this.radius * .02
          this.vy = this.radius * .02
+         this.controlSpeed = .5
          this.pushX = 0
          this.pushY = 0
          this.colliding = false
-         this.collisionForce = 2.5;
+         this.collisionForce = 1;
+         this.collisionAngle = 0
          this.friction = 0.96
-         this.color = 'green'
+         this.color = 'blue'
       }
       draw(ctx) {
          // ctx.fillStyle = `hsl( ${(this.x + this.y) * .3}, 100%, 50%)`
@@ -92,21 +94,33 @@ export default (canvas, context) => {
       }
       update(ctx) {
 
-         if (this.colliding) console.log('collision player')
-         // useStatusText(ctx, JSON.stringify(this.colliding), {
-         //    x: self.x - self.radius * 4,
-         //    y: self.y - self.radius * 2
-         // }, '20', this.canvas)
+         this.color = this.colliding ? "red" : "blue"
+         this.pushY += this.input.pressedKeys.includes('push down') ? this.controlSpeed * this.vy : 0
+         this.pushY += this.input.pressedKeys.includes('push up') ? -this.controlSpeed * this.vy : 0
 
-         this.color = this.colliding ? "red" : "green"
-         this.pushY += this.input.pressedKeys.includes('push down') ? .5 * this.vy : 0
-         this.pushY += this.input.pressedKeys.includes('push up') ? -.5 * this.vy : 0
+         this.pushX += this.input.pressedKeys.includes('push right') ? this.controlSpeed * this.vx : 0
+         this.pushX += this.input.pressedKeys.includes('push left') ? -this.controlSpeed * this.vx : 0
 
-         this.pushX += this.input.pressedKeys.includes('push right') ? .5 * this.vx : 0
-         this.pushX += this.input.pressedKeys.includes('push left') ? -.5 * this.vx : 0
+         if (this.colliding) {
+            const
+               pushX = Math.cos(this.collisionAngle),
+               pushY = Math.sin(this.collisionAngle);
 
-         this.x += (this.pushX *= this.friction)
-         this.y += (this.pushY *= this.friction)
+            this.pushX += pushX;
+            this.pushY += pushY;
+            this.x += (this.pushX *= this.friction) * this.collisionForce;
+            this.y += (this.pushY *= this.friction) * this.collisionForce;
+         } else {
+            this.x += (this.pushX *= this.friction)
+            this.y += (this.pushY *= this.friction)
+         }
+
+         useStatusText(ctx, JSON.stringify(this.colliding), {
+            x: self.x - self.radius * 4,
+            y: self.y - self.radius * 2
+         }, '20', this.canvas)
+
+
 
 
          if (this.x < this.radius) {
@@ -162,7 +176,7 @@ export default (canvas, context) => {
          })
       }
       detectCollisions() {
-         let playerCollision = false;
+         let playerCollision = false; //=> each loop this resets to false, when we detect collisions we make it true, it will return false and be checked
          for (let a = 0; a < this.entities.length; a++) {
             const
                e1 = this.entities[a],
@@ -179,20 +193,16 @@ export default (canvas, context) => {
             if (collision) {
                playerCollision = true;
                const angle = Math.atan2(dy, dx);
-               // Calculate push direction for each entity
+               this.player.collisionAngle = angle
+               //=>> Calculate push direction for each entity
                const pushX = Math.cos(angle);
                const pushY = Math.sin(angle);
-               console.log({ pushX, pushY, angle, dx, dy });
 
                this.entities[a].pushX -= pushX;
                this.entities[a].pushY -= pushY;
                this.entities[a].x -= pushX * e1.collisionForce;
                this.entities[a].y -= pushY * e1.collisionForce;
 
-               this.player.x += pushX * e2.collisionForce;
-               this.player.y += pushY * e2.collisionForce;
-               this.player.pushX += pushX;
-               this.player.pushY += pushY;
             }
          }
 
