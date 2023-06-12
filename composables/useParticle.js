@@ -14,7 +14,7 @@ export default class Particle {
       this.colliding = false
       this.collisionForce = 2.5;
       this.collisionAngle = 0;
-      this.mainColor = `hsl(${random(360)}, 50%, 25%)`
+      this.mainColor = `hsl(${random(360)}, 30%, 50%)`
       this.color = this.mainColor
    }
    draw(ctx) {

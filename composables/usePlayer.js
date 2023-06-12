@@ -24,16 +24,25 @@ export default class Player {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
       ctx.fillStyle = this.color
+      ctx.strokeStyle = '#fff9'
+      ctx.lineWidth = 10
+      ctx.stroke()
       ctx.fill()
    }
    update(ctx) {
 
       this.color = this.colliding ? "red" : this.mainColor
-      this.pushY += this.input.pressedKeys.includes('down') ? this.controlSpeed * this.vy : 0
-      this.pushY += this.input.pressedKeys.includes('up') ? -this.controlSpeed * this.vy : 0
+      const key = (includes) => this.input.pressedKeys.includes(includes)
 
-      this.pushX += this.input.pressedKeys.includes('right') ? this.controlSpeed * this.vx : 0
-      this.pushX += this.input.pressedKeys.includes('left') ? -this.controlSpeed * this.vx : 0
+      if (!(key('up') && key('down'))) {
+         this.pushY += key('up') ? -this.controlSpeed * this.vy : 0
+         this.pushY += key('down') ? this.controlSpeed * this.vy : 0
+      }
+
+      if (!(key('left') && key('right'))) {
+         this.pushX += key('left') ? -this.controlSpeed * this.vx : 0
+         this.pushX += key('right') ? this.controlSpeed * this.vx : 0
+      }
 
       if (this.colliding) {
          const
