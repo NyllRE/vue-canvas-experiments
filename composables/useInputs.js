@@ -1,50 +1,43 @@
 export default class Input {
    constructor() {
-      this.lastKey = ""
-      this.pressedKeys = []
+      this.pressedKeys = [];
+
       window.addEventListener('keydown', (e) => {
-         this.lastKey = lastKeyValue(e.key, 'push')
-
-         if (this.pressedKeys.includes('push left') && this.lastKey.includes('right')) {
-            this.pressedKeys.splice(this.pressedKeys.indexOf('push left'))
-         } else if (this.pressedKeys.includes('push right') && this.lastKey.includes('left')) {
-            this.pressedKeys.splice(this.pressedKeys.indexOf('push right'))
-         } else if (this.pressedKeys.includes('push up') && this.lastKey.includes('down')) {
-            this.pressedKeys.splice(this.pressedKeys.indexOf('push up'))
-         } else if (this.pressedKeys.includes('push down') && this.lastKey.includes('up')) {
-            this.pressedKeys.splice(this.pressedKeys.indexOf('push down'))
+         const key = getKeyName(e.key);
+         if (!this.pressedKeys.includes(key)) {
+            this.pressedKeys.push(key);
          }
+      });
 
-         if (!this.pressedKeys.includes(this.lastKey)) {
-            this.pressedKeys.push(this.lastKey)
-         }
-      }
-      )
       window.addEventListener('keyup', (e) => {
-         this.lastKey = lastKeyValue(e.key, 'release')
-         this.pressedKeys.splice(this.pressedKeys.indexOf(this.lastKey))
-      })
+         const key = getKeyName(e.key);
+         const index = this.pressedKeys.indexOf(key);
+         if (index > -1) {
+            this.pressedKeys.splice(index, 1);
+         }
+      });
    }
 }
 
-const lastKeyValue = (key, release) => {
+const getKeyName = (key) => {
    switch (key) {
       case "w":
       case "ArrowUp":
-         return `${release} up`;
+         return "up";
 
       case "a":
       case "ArrowLeft":
-         return `${release} left`;
+         return "left";
 
       case "s":
       case "ArrowDown":
-         return `${release} down`;
+         return "down";
 
       case "d":
       case "ArrowRight":
-         return `${release} right`;
+         return "right";
+
       default:
-         return key
+         return key;
    }
 }

@@ -29,11 +29,11 @@ export default class Player {
    update(ctx) {
 
       this.color = this.colliding ? "red" : this.mainColor
-      this.pushY += this.input.pressedKeys.includes('push down') ? this.controlSpeed * this.vy : 0
-      this.pushY += this.input.pressedKeys.includes('push up') ? -this.controlSpeed * this.vy : 0
+      this.pushY += this.input.pressedKeys.includes('down') ? this.controlSpeed * this.vy : 0
+      this.pushY += this.input.pressedKeys.includes('up') ? -this.controlSpeed * this.vy : 0
 
-      this.pushX += this.input.pressedKeys.includes('push right') ? this.controlSpeed * this.vx : 0
-      this.pushX += this.input.pressedKeys.includes('push left') ? -this.controlSpeed * this.vx : 0
+      this.pushX += this.input.pressedKeys.includes('right') ? this.controlSpeed * this.vx : 0
+      this.pushX += this.input.pressedKeys.includes('left') ? -this.controlSpeed * this.vx : 0
 
       if (this.colliding) {
          const
