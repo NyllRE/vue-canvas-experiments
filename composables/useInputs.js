@@ -1,14 +1,30 @@
 export default class Input {
    constructor() {
       this.lastKey = ""
+      this.pressedKeys = []
       window.addEventListener('keydown', (e) => {
          this.lastKey = lastKeyValue(e.key, 'push')
-         console.log(this.lastKey);
+
+         if (this.pressedKeys.includes('push left') && this.lastKey.includes('right')) {
+            this.pressedKeys.splice(this.pressedKeys.indexOf('push left'))
+         } else if (this.pressedKeys.includes('push right') && this.lastKey.includes('left')) {
+            this.pressedKeys.splice(this.pressedKeys.indexOf('push right'))
+         } else if (this.pressedKeys.includes('push up') && this.lastKey.includes('down')) {
+            this.pressedKeys.splice(this.pressedKeys.indexOf('push up'))
+         } else if (this.pressedKeys.includes('push down') && this.lastKey.includes('up')) {
+            this.pressedKeys.splice(this.pressedKeys.indexOf('push down'))
+         }
+
+
+         if (!this.pressedKeys.includes(this.lastKey)) {
+            this.pressedKeys.push(this.lastKey)
+         }
       }
       )
       window.addEventListener('keyup', (e) => {
          this.lastKey = lastKeyValue(e.key, 'release')
-         console.log(this.lastKey);
+         this.pressedKeys.splice(this.pressedKeys.indexOf(this.lastKey))
+         console.log(this.pressedKeys);
       })
    }
 }

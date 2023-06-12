@@ -9,14 +9,47 @@ export default (canvas, context) => {
       context.strokeStyle = 'white'
    }
 
+   class Particle {
+      constructor(effect, canvas) {
+         this.canvas = canvas;
+         this.effect = effect;
+         this.radius = random(20, 5);
+         //=> make all particles visible
+         this.x = this.radius + Math.random() * (this.canvas.width - this.radius * 2);
+         this.y = this.radius + Math.random() * (this.canvas.height - this.radius * 2);
+         this.colliding = false
+         this.collisionForce = 2.5;
+         this.color = 'green'
+      }
+      draw(ctx) {
+         // ctx.fillStyle = `hsl( ${(this.x + this.y) * .3}, 100%, 50%)`
+         ctx.beginPath();
+         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
+         ctx.fillStyle = this.color
+         ctx.fill()
+      }
+      update(ctx) {
+
+         if (this.colliding) console.log('collision particle')
+         this.color = this.colliding ? "red" : "green"
+         // useStatusText(ctx, JSON.stringify(this.colliding), {
+         //    x: self.x - self.radius * 4,
+         //    y: self.y - self.radius * 2
+         // }, '20', this.canvas)
+
+      }
+      push() {
+         if (this.x > this.effect.width || this.x < 0) this.x = this.effect.width
+      }
+   }
 
 
    class Player {
       constructor(effect, canvas, input) {
-         this.input = input
-         this.canvas = canvas;
          this.effect = effect;
-         this.radius = random(20, 5);
+         this.canvas = canvas;
+         this.input = input;
+         this.radius = random(30, 15);
          //=> make all particles visible
          this.x = this.radius + Math.random() * (this.canvas.width - this.radius * 2);
          this.y = this.radius + Math.random() * (this.canvas.height - this.radius * 2);
@@ -24,29 +57,32 @@ export default (canvas, context) => {
          this.vy = this.radius * .05
          this.pushX = 0
          this.pushY = 0
-         this.collidingX = false
-         this.collidingY = false
+         this.colliding = false
+         this.collisionForce = 2.5;
          this.friction = 0.96
+         this.color = 'green'
       }
       draw(ctx) {
          // ctx.fillStyle = `hsl( ${(this.x + this.y) * .3}, 100%, 50%)`
          ctx.beginPath();
          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
+         ctx.fillStyle = this.color
          ctx.fill()
-         ctx.filter = 'none'
       }
       update(ctx) {
-         ctx.fillStyle = !this.collidingX || !this.collidingY ? "red" : "green"
-         this.pushY +=
-            this.input.lastKey == 'push down' ? .5 * this.vy
-               : this.input.lastKey == 'push up' ? -.5 * this.vy
-                  : 0
 
-         // this.pushX = !this.collidingY ? this.pushX * -1 : this.pushX
-         this.pushX +=
-            this.input.lastKey == 'push right' ? .5 * this.vx
-               : this.input.lastKey == 'push left' ? -.5 * this.vx
-                  : 0
+         if (this.colliding) console.log('collision player')
+         // useStatusText(ctx, JSON.stringify(this.colliding), {
+         //    x: self.x - self.radius * 4,
+         //    y: self.y - self.radius * 2
+         // }, '20', this.canvas)
+
+         this.color = this.colliding ? "red" : "green"
+         this.pushY += this.input.pressedKeys.includes('push down') ? .5 * this.vy : 0
+         this.pushY += this.input.pressedKeys.includes('push up') ? -.5 * this.vy : 0
+
+         this.pushX += this.input.pressedKeys.includes('push right') ? .5 * this.vx : 0
+         this.pushX += this.input.pressedKeys.includes('push left') ? -.5 * this.vx : 0
 
          this.x += (this.pushX *= this.friction)
          this.y += (this.pushY *= this.friction)
@@ -74,59 +110,65 @@ export default (canvas, context) => {
    }
 
    class Effect {
-      constructor(canvas) {
+      constructor(canvas, input) {
          this.canvas = canvas;
          this.width = this.canvas.width;
          this.height = this.canvas.height;
          this.entities = []
+         this.player = new Player(this, canvas, input)
 
-         this.entities.push(new Player(this, canvas, input))
          this.createEntities()
 
          window.addEventListener('resize', e => {
             this.width = this.canvas.width = e.target.window.innerWidth
             this.height = this.canvas.height = e.target.window.innerHeight
             contextSetter()
-            this.particles.forEach(particle => particle.reset())
+            // this.particles.forEach(particle => particle.reset())
          })
       }
       createEntities() {
          for (let i = 0; i < 5; i++) {
-            const player = new Player(this, canvas, input)
-            player.vx = 0
-            player.vy = 0
-            this.entities.push(player)
+            const particle = new Particle(this, canvas)
+            this.entities.push(particle)
          }
       }
       handlePlayers() {
+         this.player.draw(context)
+         this.player.update(context)
          this.entities.forEach(entity => {
             entity.draw(context)
             entity.update(context)
          })
       }
       detectCollisions() {
+         let playerCollision = false;
          for (let a = 0; a < this.entities.length; a++) {
-            for (let b = a; b < this.entities.length; b++) {
-               if (a == b) continue
-               const
-                  e1 = this.entities[a],
-                  e2 = this.entities[b],
-                  dx = Math.abs(e2.x - e1.x),
-                  dy = Math.abs(e2.y - e1.y),
-                  distance = Math.sqrt(dx * dx + dy * dy),
-                  distanceRadius = e2.radius + e1.radius
+            const
+               e1 = this.entities[a],
+               e2 = this.player,
+               dx = Math.abs(e2.x - e1.x),
+               dy = Math.abs(e2.y - e1.y),
+               distance = Math.hypot(dx, dy),
+               distanceRadius = e2.radius + e1.radius
 
-               this.entities[a].collidingX = dx > (distanceRadius)
-               this.entities[a].collidingY = dy > (distanceRadius)
-               this.entities[b].collidingX = dx > (distanceRadius)
-               this.entities[b].collidingY = dy > (distanceRadius)
+            const collision = distance <= distanceRadius
 
-               useStatusText(context, JSON.stringify({ dis: Math.abs(distance) }), {
-                  x: e1.x - e1.radius * 4,
-                  y: e1.y - e1.radius * 2
-               }, '20', canvas)
+            this.entities[a].colliding = collision
+
+            if (collision) {
+               playerCollision = true;
+               const angle = Math.atan2(dy, dx);
+               // Calculate push direction for each entity
+               const pushX = Math.cos(angle);
+               const pushY = Math.sin(angle);
+               this.entities[a].x -= pushX * e1.collisionForce;
+               this.entities[a].y -= pushY * e1.collisionForce;
+               this.player.x += pushX * e2.collisionForce;
+               this.player.y += pushY * e2.collisionForce;
             }
          }
+
+         this.player.colliding = playerCollision;
       }
    }
    const random = (last, first = 0) => {
@@ -153,18 +195,3 @@ export default (canvas, context) => {
    animate()
 }
 
-
-const xInputHandler = (key) => {
-   switch (key) {
-      case 'push up':
-         return -.1
-      case 'push down':
-         return .1
-
-      case 'release down':
-      case 'release up':
-         return 0
-      default:
-         return 0
-   }
-}
