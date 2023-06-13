@@ -41,12 +41,12 @@ export default class Player {
       this.color = this.colliding ? "red" : this.mainColor
       const key = (includes) => this.input.pressedKeys.includes(includes)
 
-      if (!(key('up') && key('down'))) {
+      if (!(key('up') && key('down')) && (key('up') || key('down'))) {
          this.pushY += key('up') ? -this.controlSpeed * this.vy : 0
          this.pushY += key('down') ? this.controlSpeed * this.vy : 0
       }
 
-      if (!(key('left') && key('right'))) {
+      if (!(key('left') && key('right')) && (key('left') || key('right'))) {
          this.pushX += key('left') ? -this.controlSpeed * this.vx : 0
          this.pushX += key('right') ? this.controlSpeed * this.vx : 0
       }
