@@ -40,7 +40,7 @@ export default class Player {
 
       this.color = this.colliding ? "red" : this.mainColor
       const key = (includes) => this.input.pressedKeys.includes(includes)
-
+      // I'm vwery sorry lol
       if (!(key('up') && key('down')) && (key('up') || key('down'))) {
          this.pushY += key('up') ? -this.controlSpeed * this.vy : 0
          this.pushY += key('down') ? this.controlSpeed * this.vy : 0
