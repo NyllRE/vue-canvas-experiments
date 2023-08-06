@@ -1,5 +1,7 @@
-<script setup>
+<!-- @format -->
 
+<script setup>
+print('test');
 </script>
 
 <template lang="pug">

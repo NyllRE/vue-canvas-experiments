@@ -1,3 +1,5 @@
+import { noise } from '@chriscourses/perlin-noise'
+
 export default (canvas, context) => {
 
    const contextSetter = () => {
@@ -18,6 +20,7 @@ export default (canvas, context) => {
          this.y = this.radius + Math.random() * (this.effect.height - this.radius * 2);
          this.vx = this.radius * .15
          this.vy = this.radius * .15
+         // this.vx = this.vy = 0
          this.pushX = 0
          this.pushY = 0
          this.friction = 0.96
@@ -44,9 +47,10 @@ export default (canvas, context) => {
                this.pushX += Math.cos(angle) * force;
                this.pushY += Math.sin(angle) * force;
             }
-
          }
 
+         // this.x += (this.pushX *= this.friction) + this.vx * noise(this.x, this.y)
+         // this.y += (this.pushY *= this.friction) + this.vy * noise(this.x, this.y)
          this.x += (this.pushX *= this.friction) + this.vx
          this.y += (this.pushY *= this.friction) + this.vy
 
@@ -64,7 +68,6 @@ export default (canvas, context) => {
             this.y = this.effect.height - this.radius;
             this.vy *= -1;
          }
-
 
          /*
          if (this.x > this.effect.width || this.x < 0) this.vx *= -1

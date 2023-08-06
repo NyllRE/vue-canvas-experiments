@@ -292,6 +292,11 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
+"@chriscourses/perlin-noise@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@chriscourses/perlin-noise/-/perlin-noise-1.0.5.tgz#c57078a8213a0c9b2d50a80d6b6e284152bfb913"
+  integrity sha512-AjIAlGT1M1Pc4/P3MkztzETXRI/LyGMl/fRglbY/Vgdb8Sl6Rn/yOd1XiHQD5ftiUev6i33UbReVWI95wtntpg==
+
 "@cloudflare/kv-asset-handler@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.3.0.tgz#11f0af0749a400ddadcca16dcd6f4696d7036991"
@@ -973,6 +978,11 @@
   version "18.16.16"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.16.16.tgz#3b64862856c7874ccf7439e6bab872d245c86d8e"
   integrity sha512-NpaM49IGQQAUlBhHMF82QH80J08os4ZmyF9MkpCzWAGuOHqE4gTEbhzd7L3l5LmWuZ6E0OiC1FweQ4tsiW35+g==
+
+"@types/p5@^1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@types/p5/-/p5-1.6.2.tgz#05b64a2375f7ddd35d7fac63e983358b418605e7"
+  integrity sha512-iy1B7DBMc9e5j0DrWnIjSJh+Ro9UkKxPHspbx/GvIeGFTOIJF0H2lICnIN4go1OZEAQSHBinLd7t+oe8lrrLvA==
 
 "@types/resolve@1.20.2":
   version "1.20.2"
@@ -4280,6 +4290,11 @@ p-map@^4.0.0:
   integrity sha512-/bjOqmgETBYB5BoEeGVea8dmvHb2m9GLy1E9W43yeyfP6QQCZGFNa+XRceJEuDB6zqr+gKpIAmlLebMpykw/MQ==
   dependencies:
     aggregate-error "^3.0.0"
+
+p5@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/p5/-/p5-1.7.0.tgz#c983f12c2ffc1125e17cb89e97103f7716cb9f05"
+  integrity sha512-qrbT/44Dwm63ZtOKX/mp61pw+5yj6ijYLOmRv7p6zcfjbo83Vb0gVFEvW0kTLFu7hceWCig0HONo9F1bSlqbsQ==
 
 pacote@^15.2.0:
   version "15.2.0"
