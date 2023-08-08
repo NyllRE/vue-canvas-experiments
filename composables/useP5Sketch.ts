@@ -1,8 +1,17 @@
 /** @format */
 
-// import p5 from 'p5';
 
 class Particle {
+	pos: any;
+	vel: any;
+	acc: any;
+	maxspeed: number;
+	prevPos: any;
+	p5: any;
+	scl: number;
+	cols: number;
+	width: number;
+	height: number;
 	constructor(
 		p: any,
 		width: number,
@@ -13,14 +22,13 @@ class Particle {
 		this.pos = p.createVector(p.random(width), p.random(height));
 		this.vel = p.createVector(0, 0);
 		this.acc = p.createVector(0, 0);
-		this.maxspeed = 4;
+		this.maxspeed = 6;
 		this.prevPos = this.pos.copy();
 		this.p5 = p;
 		this.scl = scl;
 		this.cols = cols;
 		this.width = width;
 		this.height = height;
-		this.opacity = 10;
 	}
 
 	update(this: any) {
@@ -40,23 +48,12 @@ class Particle {
 	}
 
 	applyForce(force: any) {
-		// console.log(force);
-
 		this.acc.add(force);
-	}
-
-	opacityFix() {
-		if (this.opacity <= 0) {
-			this.opacity = 20;
-		} else {
-			this.opacity--;
-		}
-		return this.opacity;
 	}
 
 	show(this: any) {
 		// this.p5.stroke(255, this.opacityFix());
-		this.p5.stroke(255, 10);
+		this.p5.stroke(255, 255, 255, 10);
 		this.p5.strokeWeight(1);
 		this.p5.line(this.pos.x, this.pos.y, this.prevPos.x, this.prevPos.y);
 		this.updatePrev();
@@ -92,7 +89,7 @@ export default (p: any, width: number, height: number) => {
 	// https://thecodingtrain.com/CodingChallenges/024-perlinnoiseflowfield.html
 
 	const inc = 0.1;
-	const scl = 20;
+	const scl = 10;
 	let cols = 0,
 		rows = 0;
 
@@ -105,7 +102,7 @@ export default (p: any, width: number, height: number) => {
 	let flowfield: Array<number>;
 
 	function setup() {
-		const canvas = p.createCanvas(width, height);
+		const canvas = p.createCanvas(width, height - 3);
 		canvas.parent('p5canvas');
 
 		cols = p.floor(width / scl);
@@ -117,7 +114,7 @@ export default (p: any, width: number, height: number) => {
 		for (let i = 0; i < 300; i++) {
 			particles[i] = new Particle(p, width, height, scl, cols);
 		}
-		p.background(10);
+		p.background(0);
 	}
 
 	function draw() {
@@ -126,7 +123,7 @@ export default (p: any, width: number, height: number) => {
 			let xoff = 0;
 			for (let x = 0; x < cols; x++) {
 				const index = x + y * cols;
-				const angle = p.noise(xoff, yoff, zoff) * Math.PI * 2 * 4;
+				const angle = p.noise(xoff, yoff, zoff) * Math.PI * 2 * 2;
 				// console.log(angle, Math.cos(x), Math.sin(y));
 
 				const v = p.createVector(p.cos(angle), p.sin(angle));

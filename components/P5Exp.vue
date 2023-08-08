@@ -1,25 +1,15 @@
 <!-- @format -->
 
-<script setup>
+<script setup lang="ts">
 const { $p5 } = useNuxtApp(); //Access p5 in the component or page using $ function
 
 onMounted(async () => {
 	const p5instance = new $p5((p) => {
-      // console.log(p);
 
       const {setup, draw} = useP5Sketch(p, window.innerWidth, window.innerHeight)
       p.setup = setup
       p.draw = draw
-		// p.setup = () => {
-      //    const canvas = p.createCanvas(window.innerWidth, window.innerHeight);
-      //    canvas.parent('p5canvas')
-      //    p.background(0)
-		// };
-		// p.draw = () => {
-		// 	p.background(0);
-		// 	p.ellipse(p.mouseX, p.mouseY, 50, 50);
-		// };
-	});
+   });
 });
 </script>
 
@@ -36,8 +26,8 @@ onMounted(async () => {
    background-repeat: no-repeat
    background-position: center center
    position: absolute
-   width: 100dvw
-   height: 100dvh
+   max-width: 100dvw
+   max-height: 100dvh
    top: 0
    left: 0
 </style>
